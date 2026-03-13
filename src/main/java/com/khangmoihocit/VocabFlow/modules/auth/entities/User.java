@@ -36,6 +36,9 @@ public class User {
     @Column(name = "anki_deck_name")
     String ankiDeckName;
 
+    @Column(name = "is_active")
+    Boolean isActive;
+
     @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 

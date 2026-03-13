@@ -28,6 +28,7 @@ spring:
     prefix: /api/v1
 
   jwt:
-    signerKey: QcACku/+MCwysAVv/s7cSW9J1ZdO0HkSBZrXUfYRa21I+B91ka1ZqmhBcCX8zZdg
+    signerKey: U29tZXZlcnlsb25ncmFuZG9tc3RyaW5ndGhhdGlzbW9yZXRoYW42NGJ5dGVzZm9yaHM1MTJzZWN1cml0eWNoZWNrMTIzNDU2Nzg5MQA=
     valid-duration: 7200 #in second (2 hour)
     refreshable-duration: 432000 #in second 432 000 (5day)
+    issuer: khangmoihocit

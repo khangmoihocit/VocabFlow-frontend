@@ -1,5 +1,7 @@
 package com.khangmoihocit.VocabFlow.core.config;
 
+import com.khangmoihocit.VocabFlow.core.security.JwtAuthenticationFilter;
+import com.khangmoihocit.VocabFlow.modules.auth.services.Impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +31,8 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfig {
 
+    UserDetailsServiceImpl userDetailsService;
+    JwtAuthenticationFilter jwtAuthFilter;
 
     String[] PUBLIC_POST_ENDPOINTS = {
             "/api/v1/users",
@@ -52,8 +56,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
@@ -61,8 +64,7 @@ public class SecurityConfig {
     //custom method xác thực user
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
