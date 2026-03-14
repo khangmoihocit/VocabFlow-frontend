@@ -18,53 +18,52 @@ import java.util.Map;
 @Slf4j(topic = "GlobalExceptionHandler")
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = RuntimeException.class)
-    ResponseEntity<?> handlingRuntimeException(RuntimeException exception) {
+    @ExceptionHandler(RuntimeException.class)
+    ResponseEntity<ApiResponse<?>> handlingRuntimeException(RuntimeException exception) {
         log.error("Exception: ", exception);
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.builder()
-                        .code(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode())
-                        .success(false)
-                        .message(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage())
-                        .build());
-    }
-
-    @ExceptionHandler(value = AppException.class)
-    ResponseEntity<?> handlingAppExceotion(AppException exception) {
-        ErrorCode errorCode = exception.getErrorCode();
-
-        ApiResponse<?> apiResponse = ApiResponse.builder()
-                .code(errorCode.getCode())
-                .success(false)
-                .message(errorCode.getMessage())
-                .build();
-
+        ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(apiResponse);
+                .body(ApiResponse.error(errorCode));
+    }
+
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse<?>> handleAppException(AppException exception){
+        ErrorCode errorCode = exception.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode));
     }
 
     //bắt lỗi từ @Valid
     //return 1 list error
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<?> handleValidException(MethodArgumentNotValidException exception){
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResponse<?>> handleValidException(MethodArgumentNotValidException exception){
+
         Map<String, String> errors = new HashMap<>();
-        exception.getBindingResult().getAllErrors().forEach(error->{
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+
+        exception.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.put(error.getField(), error.getDefaultMessage());
         });
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("code", 8888);
-        response.put("message", "Có lỗi xảy ra trong quá trình xử lý dữ liệu");
-        response.put("success", false);
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.UNPROCESSABLE_CONTENT);
-        response.put("errors", errors);
+        ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
 
-        return new ResponseEntity<>(response, HttpStatus.UNPROCESSABLE_CONTENT);
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode, errors));
+    }
+
+    //username sai hoặc password sai
+    //xảy ra bên trong AuthenticationManager hoặc DaoAuthenticationProvider.
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    ResponseEntity<ApiResponse<?>> handleBadCredentialsException(
+            org.springframework.security.authentication.BadCredentialsException exception) {
+
+        ErrorCode errorCode = ErrorCode.INVALID_CREDENTIALS;
+
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ApiResponse.error(errorCode));
     }
 
 }

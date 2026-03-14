@@ -3,6 +3,7 @@ package com.khangmoihocit.VocabFlow.modules.auth.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,7 @@ public class RefreshToken {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     String token;
 
     @Column(name = "expiry_date", nullable = false)
@@ -36,5 +37,6 @@ public class RefreshToken {
     boolean revoked = false;
 
     @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     LocalDateTime createdAt = LocalDateTime.now();
 }

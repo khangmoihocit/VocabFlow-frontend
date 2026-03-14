@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,6 +115,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    //401 Unauthorized	Chưa xác thực hoặc token không hợp lệ / hết hạn
+    //403 Forbidden	Đã xác thực thành công, nhưng không có quyền truy cập
+
     private void sendErrorResponse(
             @NotNull HttpServletResponse response,
             @NotNull HttpServletRequest request,
@@ -123,7 +127,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("Timestamp", System.currentTimeMillis());
+        errorResponse.put("timestamp", LocalDateTime.now());
         errorResponse.put("status", statusCode);
         errorResponse.put("error", error);
         errorResponse.put("message", message);

@@ -1,22 +1,48 @@
 package com.khangmoihocit.VocabFlow.core.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import com.khangmoihocit.VocabFlow.core.enums.ErrorCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-
+import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Builder
-public class ApiResponse <T>{
-    int code;
-    boolean success;
-    String message;
-    T data;
+@Data
+public class ApiResponse<T> {
+
+    private String code;
+    private String message;
+    private T data;
+    private Object errors;
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    public static <T> ApiResponse<T> success(T data){
+        ApiResponse<T> res = new ApiResponse<>();
+        res.code = "SUCCESS";
+        res.message = "Success";
+        res.data = data;
+        return res;
+    }
+
+    public static <T> ApiResponse<T> success(T data, String message){
+        ApiResponse<T> res = new ApiResponse<>();
+        res.code = "SUCCESS";
+        res.message = message;
+        res.data = data;
+        return res;
+    }
+
+    public static ApiResponse<?> error(ErrorCode errorCode){
+        ApiResponse<?> res = new ApiResponse<>();
+        res.code = errorCode.getCode();
+        res.message = errorCode.getMessage();
+        return res;
+    }
+
+    public static ApiResponse<?> error(ErrorCode errorCode, Object errors){
+        ApiResponse<?> res = error(errorCode);
+        res.errors = errors;
+        return res;
+    }
 }
