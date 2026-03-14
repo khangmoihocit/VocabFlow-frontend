@@ -2,6 +2,9 @@ package com.khangmoihocit.VocabFlow.core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khangmoihocit.VocabFlow.modules.user.services.Impl.UserDetailsServiceImpl;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +22,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import io.jsonwebtoken.security.SignatureException;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,35 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
-
-            if (!jwtService.isTokenFormatValid(jwt)) {
-                sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Xác thực không thành công",
-                        "token không đúng định dạng");
-                return;
-            }
-
-            if (!jwtService.isSignatureValid(jwt)) {
-                sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Xác thực không thành công",
-                        "chữ ký token không hợp lệ");
-                return;
-            }
-
-            if (!jwtService.isIssuerToken(jwt)) {
-                sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Xác thực không thành công",
-                        "token có nguồn gốc không hợp lệ");
-                return;
-            }
-
-            if (jwtService.isTokenExpired(jwt)) {
-                sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
-                        "Xác thực không thành công",
-                        "token đã hết hạn");
-                return;
-            }
-
             final String userEmail = jwtService.extractUsername(jwt);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -102,19 +79,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
             filterChain.doFilter(request, response);
+        } catch (ExpiredJwtException ex) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Token đã hết hạn, vui lòng đăng nhập lại");
+        } catch (SignatureException ex) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Chữ ký token không hợp lệ hoặc đã bị giả mạo");
+        } catch (MalformedJwtException ex) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Token không đúng định dạng");
+        } catch (UnsupportedJwtException ex) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Định dạng Token không được hệ thống hỗ trợ");
+        } catch (IllegalArgumentException ex) {
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Token không hợp lệ hoặc bị trống");
         } catch (Exception ex) {
-            log.error("JWT error: ", ex);
-
-            sendErrorResponse(response, request,
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Xác thực không thành công",
-                    ex.getMessage());
+            sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công", "Đã xảy ra lỗi trong quá trình xác thực token");
         }
     }
 
     //401 Unauthorized	Chưa xác thực hoặc token không hợp lệ / hết hạn
     //403 Forbidden	Đã xác thực thành công, nhưng không có quyền truy cập
-
     private void sendErrorResponse(
             @NotNull HttpServletResponse response,
             @NotNull HttpServletRequest request,
