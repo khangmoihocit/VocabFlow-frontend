@@ -1,8 +1,8 @@
 package com.khangmoihocit.VocabFlow.core.config;
 
 import com.khangmoihocit.VocabFlow.core.enums.RoleEnum;
-import com.khangmoihocit.VocabFlow.modules.auth.entities.User;
-import com.khangmoihocit.VocabFlow.modules.auth.repositories.UserRepository;
+import com.khangmoihocit.VocabFlow.modules.user.entities.User;
+import com.khangmoihocit.VocabFlow.modules.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;

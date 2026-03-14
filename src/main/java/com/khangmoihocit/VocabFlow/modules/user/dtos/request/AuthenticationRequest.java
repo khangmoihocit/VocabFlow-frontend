@@ -1,4 +1,4 @@
-package com.khangmoihocit.VocabFlow.modules.auth.dtos.request;
+package com.khangmoihocit.VocabFlow.modules.user.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

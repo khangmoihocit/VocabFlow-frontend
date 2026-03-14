@@ -1,10 +1,7 @@
 package com.khangmoihocit.VocabFlow.core.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khangmoihocit.VocabFlow.core.utils.JwtUtil;
-import com.khangmoihocit.VocabFlow.modules.auth.dtos.UserDetailsCustom;
-import com.khangmoihocit.VocabFlow.modules.auth.services.Impl.UserDetailsServiceImpl;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.khangmoihocit.VocabFlow.modules.user.services.Impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -33,9 +29,8 @@ import java.util.Map;
 @Slf4j(topic = "JWT AUTHENTICATION  FILTER")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    JwtUtil jwtUtil;
+    JwtService jwtService;
     UserDetailsServiceImpl userDetailService;
-    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     //trước khi vào controller sẽ vào filter này để check token, check đầu -> security config
     @Override
@@ -54,35 +49,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             final String jwt = authHeader.substring(7);
 
-            if (!jwtUtil.isTokenFormatValid(jwt)) {
+            if (!jwtService.isTokenFormatValid(jwt)) {
                 sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
                         "Xác thực không thành công",
                         "token không đúng định dạng");
                 return;
             }
 
-            if (!jwtUtil.isSignatureValid(jwt)) {
+            if (!jwtService.isSignatureValid(jwt)) {
                 sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
                         "Xác thực không thành công",
                         "chữ ký token không hợp lệ");
                 return;
             }
 
-            if (!jwtUtil.isIssuerToken(jwt)) {
+            if (!jwtService.isIssuerToken(jwt)) {
                 sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
                         "Xác thực không thành công",
                         "token có nguồn gốc không hợp lệ");
                 return;
             }
 
-            if (jwtUtil.isTokenExpired(jwt)) {
+            if (jwtService.isTokenExpired(jwt)) {
                 sendErrorResponse(response, request, HttpServletResponse.SC_UNAUTHORIZED,
                         "Xác thực không thành công",
                         "token đã hết hạn");
                 return;
             }
 
-            final String userEmail = jwtUtil.extractUsername(jwt);
+            final String userEmail = jwtService.extractUsername(jwt);
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if (userEmail != null && authentication == null) {
@@ -107,10 +102,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
             filterChain.doFilter(request, response);
-        } catch (ServletException | IOException ex) {
+        } catch (Exception ex) {
+            log.error("JWT error: ", ex);
+
             sendErrorResponse(response, request,
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "Network Error!",
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    "Xác thực không thành công",
                     ex.getMessage());
         }
     }
@@ -127,7 +124,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("timestamp", System.currentTimeMillis());
         errorResponse.put("status", statusCode);
         errorResponse.put("error", error);
         errorResponse.put("message", message);

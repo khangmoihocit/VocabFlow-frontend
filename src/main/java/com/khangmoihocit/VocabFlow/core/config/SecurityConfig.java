@@ -1,7 +1,8 @@
 package com.khangmoihocit.VocabFlow.core.config;
 
+import com.khangmoihocit.VocabFlow.core.security.JwtAccessDeniedHandler;
 import com.khangmoihocit.VocabFlow.core.security.JwtAuthenticationFilter;
-import com.khangmoihocit.VocabFlow.modules.auth.services.Impl.UserDetailsServiceImpl;
+import com.khangmoihocit.VocabFlow.modules.user.services.Impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +36,10 @@ public class SecurityConfig {
 
     UserDetailsServiceImpl userDetailsService;
     JwtAuthenticationFilter jwtAuthFilter;
+    JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     String[] PUBLIC_POST_ENDPOINTS = {
-            "/api/v1/users",
+            "/api/v1/auth/register",
             "/api/v1/auth/login",
             "/api/v1/auth/refresh",
             "/api/v1/auth/logout"
@@ -58,6 +60,8 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();

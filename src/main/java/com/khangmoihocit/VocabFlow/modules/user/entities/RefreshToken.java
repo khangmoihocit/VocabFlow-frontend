@@ -1,4 +1,4 @@
-package com.khangmoihocit.VocabFlow.modules.auth.entities;
+package com.khangmoihocit.VocabFlow.modules.user.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

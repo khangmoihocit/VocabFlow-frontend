@@ -1,4 +1,4 @@
-package com.khangmoihocit.VocabFlow.modules.auth.entities;
+package com.khangmoihocit.VocabFlow.modules.user.entities;
 
 import com.khangmoihocit.VocabFlow.core.enums.RoleEnum;
 import jakarta.persistence.*;
@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.management.relation.RoleUnresolved;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

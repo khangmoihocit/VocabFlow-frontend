@@ -1,6 +1,6 @@
-package com.khangmoihocit.VocabFlow.modules.auth.repositories;
+package com.khangmoihocit.VocabFlow.modules.user.repositories;
 
-import com.khangmoihocit.VocabFlow.modules.auth.entities.User;
+import com.khangmoihocit.VocabFlow.modules.user.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

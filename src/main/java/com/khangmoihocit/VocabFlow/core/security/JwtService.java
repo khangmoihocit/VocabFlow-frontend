@@ -1,11 +1,9 @@
-package com.khangmoihocit.VocabFlow.core.utils;
+package com.khangmoihocit.VocabFlow.core.security;
 
 
-import com.khangmoihocit.VocabFlow.modules.auth.repositories.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,7 +23,7 @@ import java.util.function.Function;
 
 @Component
 @Slf4j
-public class JwtUtil {
+public class JwtService {
     @NonFinal
     @Value("${spring.jwt.signerKey}")
     protected String SIGNER_KEY;

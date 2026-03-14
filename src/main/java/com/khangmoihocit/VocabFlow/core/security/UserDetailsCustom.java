@@ -1,4 +1,4 @@
-package com.khangmoihocit.VocabFlow.modules.auth.dtos;
+package com.khangmoihocit.VocabFlow.core.security;
 
 import lombok.*;
 import org.jspecify.annotations.Nullable;

@@ -1,8 +1,8 @@
-package com.khangmoihocit.VocabFlow.modules.auth.services.Impl;
+package com.khangmoihocit.VocabFlow.modules.user.services.Impl;
 
-import com.khangmoihocit.VocabFlow.modules.auth.dtos.UserDetailsCustom;
-import com.khangmoihocit.VocabFlow.modules.auth.entities.User;
-import com.khangmoihocit.VocabFlow.modules.auth.repositories.UserRepository;
+import com.khangmoihocit.VocabFlow.core.security.UserDetailsCustom;
+import com.khangmoihocit.VocabFlow.modules.user.entities.User;
+import com.khangmoihocit.VocabFlow.modules.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

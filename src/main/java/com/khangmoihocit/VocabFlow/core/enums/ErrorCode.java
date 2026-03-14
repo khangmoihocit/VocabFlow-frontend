@@ -25,6 +25,8 @@ public enum ErrorCode {
     USER_NOT_FOUND("USER_NOT_FOUND", "Người dùng không tồn tại", HttpStatus.NOT_FOUND),
     USER_ALREADY_EXISTS("USER_ALREADY_EXISTS", "Người dùng đã tồn tại", HttpStatus.CONFLICT),
     ACCOUNT_DISABLED("ACCOUNT_DISABLED", "Tài khoản đã bị vô hiệu hóa", HttpStatus.FORBIDDEN),
+    EMAIL_ALREADY_EXISTS("EMAIL_ALREADY_EXISTS", "Email đã tồn tại", HttpStatus.CONFLICT),
+    USER_IS_EMPTY("USER_IS_EMPTY", "Danh sách người dùng trống", HttpStatus.NOT_FOUND),
 
     // ===== VALIDATION =====
     VALIDATION_ERROR("VALIDATION_ERROR", "Dữ liệu không hợp lệ", HttpStatus.BAD_REQUEST),

@@ -1,4 +1,4 @@
-package com.khangmoihocit.VocabFlow.modules.auth.dtos.response;
+package com.khangmoihocit.VocabFlow.modules.user.dtos.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
