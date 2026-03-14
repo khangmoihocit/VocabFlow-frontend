@@ -2,6 +2,7 @@ package com.khangmoihocit.VocabFlow.modules.user.controllers;
 
 import com.khangmoihocit.VocabFlow.core.response.ApiResponse;
 import com.khangmoihocit.VocabFlow.modules.user.dtos.request.AuthenticationRequest;
+import com.khangmoihocit.VocabFlow.modules.user.dtos.request.RefreshTokenRequest;
 import com.khangmoihocit.VocabFlow.modules.user.dtos.request.UserCreationRequest;
 import com.khangmoihocit.VocabFlow.modules.user.dtos.response.AuthenticationResponse;
 import com.khangmoihocit.VocabFlow.modules.user.dtos.response.UserResponse;
@@ -34,6 +35,13 @@ public class AuthenticationController {
     ResponseEntity<?> register(@Valid @RequestBody UserCreationRequest request){
         ApiResponse<UserResponse> response =
                 ApiResponse.success(authenticationService.register(request), "Tạo tài khoản thành công!");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh-token")
+    ResponseEntity<?> refresh(@Valid @RequestBody RefreshTokenRequest request){
+        ApiResponse<?> response =
+                ApiResponse.success(authenticationService.refreshToken(request));
         return ResponseEntity.ok(response);
     }
 

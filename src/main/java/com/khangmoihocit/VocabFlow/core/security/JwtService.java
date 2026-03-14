@@ -67,6 +67,7 @@ public class JwtService {
                 .compact();
     }
 
+    //đã bao gồm kiểm tra token: hạn, chữ ký, issuer,...
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
     }
@@ -76,53 +77,6 @@ public class JwtService {
         LocalDateTime expired = claims.getExpiration().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return expired;
     }
-/*
-    1. token có đúng định dạng không
-    2. chữ ký của token có đúng không
-    3. kiểm tra xem token có hết hạn hay chuưa
-    4.  user_id của token có khớp với userdetail không
-    5. kiểm tra xem token có trong blacklist không
-    6. kiểm tra quyền
-    */
-
-
-    public boolean isTokenFormatValid(String token){
-        try{
-            String[] tokenParts = token.split("\\.");
-            return tokenParts.length == 3;
-        }catch (Exception e){
-            return false;
-        }
-    }
-
-    public boolean isSignatureValid(String token){
-        try{
-            Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isTokenExpired(String token) {
-        try {
-            final Date expiration = extractClaims(token, Claims::getExpiration);
-            if (expiration == null) {
-                return true;
-            }
-            return expiration.before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        } catch (Exception e) {
-            return true;
-        }
-    }
-
-    public boolean isIssuerToken(String token){
-        String tokenIssuer = extractClaims(token, Claims::getIssuer);
-        return tokenIssuer.equals(ISSUER);
-    }
-
 
     // Lấy theo nhiều claim khác nhau
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {

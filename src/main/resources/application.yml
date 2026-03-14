@@ -29,6 +29,6 @@ spring:
 
   jwt:
     signerKey: U29tZXZlcnlsb25ncmFuZG9tc3RyaW5ndGhhdGlzbW9yZXRoYW42NGJ5dGVzZm9yaHM1MTJzZWN1cml0eWNoZWNrMTIzNDU2Nzg5MQA=
-    valid-duration: 7200 #in second (2 hour)
+    valid-duration: 30 #7200 #in second (2 hour)
     refreshable-duration: 432000 #in second 432 000 (5day)
     issuer: khangmoihocit
