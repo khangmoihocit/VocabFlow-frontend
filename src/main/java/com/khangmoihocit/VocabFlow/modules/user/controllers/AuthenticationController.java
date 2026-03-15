@@ -45,4 +45,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/logout")
+    ResponseEntity<?> logout(@Valid @RequestBody RefreshTokenRequest request){
+        authenticationService.logout(request);
+        ApiResponse<?> response = ApiResponse.success("Đăng xuất thành công!");
+        return ResponseEntity.ok(response);
+    }
+
 }

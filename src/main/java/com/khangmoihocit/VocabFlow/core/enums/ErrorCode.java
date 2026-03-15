@@ -21,6 +21,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED("REFRESH_TOKEN_EXPIRED", "Refresh token đã hết hạn", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_REVOKED("REFRESH_TOKEN_REVOKED", "Refresh token đã bị thu hồi", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKEN_LIMIT("REFRESH_TOKEN_LIMIT", "Bạn đang đăng nhập trên 3 thiết bị, các thiết bị trước đó sẽ tự động đăng xuất", HttpStatus.BAD_REQUEST),
+    INVALID_REFRESH_TOKEN("INVALID_REFRESH_TOKEN", "Refresh token không hợp lệ", HttpStatus.UNAUTHORIZED),
 
     // ===== USER =====
     USER_NOT_FOUND("USER_NOT_FOUND", "Người dùng không tồn tại", HttpStatus.NOT_FOUND),
