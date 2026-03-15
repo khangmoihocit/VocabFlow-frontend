@@ -57,7 +57,7 @@ public class DictionaryWordServiceImpl implements DictionaryWordService {
                 .word(cleanWord)
                 .partOfSpeech(dictData.partOfSpeech() != null ? dictData.partOfSpeech() : "unknown")
                 .pronunciation(dictData.phonetic())
-                .meaningVi("Đang cập nhật!") // Lời nhắc cho Frontend
+                .meaningVi("Đang cập nhật!")
                 .explanationEn(dictData.explanationEn())
                 .audioUrl(finalAudioUrl)
                 .build();
@@ -69,6 +69,11 @@ public class DictionaryWordServiceImpl implements DictionaryWordService {
     @Override
     public LookupResponse lookupWithAi(LookupRequest request) {
         String cleanWord = request.getWord().trim().toLowerCase();
+//        Optional<DictionaryWord> existingWordOpt = dictionaryWordRepository.findFirstByWord(cleanWord);
+//        if (existingWordOpt.isPresent()) {
+//            return dictionaryWordMapper.mapToResponse(existingWordOpt.get());
+//        }
+
         WordData aiData = fetchFromGeminiApi(cleanWord, request.getContextSentence());
         WordData dictData = fetchFromDictionaryApi(cleanWord);
 
