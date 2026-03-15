@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserResponse toUserResponse(User user);
+    List<UserResponse> toListUserResponse(List<User> users);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
@@ -19,5 +20,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     User toUser(UserCreationRequest request);
+
 
 }
