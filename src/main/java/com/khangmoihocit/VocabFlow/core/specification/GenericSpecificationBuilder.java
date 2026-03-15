@@ -5,7 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericSpecificationBuilder<T> {
+public class GenericSpecificationBuilder<T> {//tạo nhanh và gộp các generic specification
 
     private final List<SearchCriteria> params;
 

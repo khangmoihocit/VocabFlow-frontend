@@ -28,10 +28,11 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<?> getAll(HttpServletRequest request){
+    ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAll(HttpServletRequest request){
         Map<String, String[]> parameters = request.getParameterMap();
         PageResponse<UserResponse> pageResponse = userService.getUsers(parameters);
-        ApiResponse<PageResponse<UserResponse>> response = ApiResponse.success(pageResponse);
+        ApiResponse<PageResponse<UserResponse>> response =
+                ApiResponse.success(pageResponse, pageResponse.getData().isEmpty() ? "Danh sách user trống" : "Lấy danh sách thành công");
 
         return ResponseEntity.ok(response);
     }

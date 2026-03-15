@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.data.jpa.domain.Specification;
 
 @AllArgsConstructor
-public class GenericSpecification<T> implements Specification<@NonNull T> { //chỉ 1
+public class GenericSpecification<T> implements Specification<@NonNull T> { //tạo ra 1 câu truy vấn
     private SearchCriteria criteria;
 
     @Override
