@@ -40,6 +40,13 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(errorCode));
     }
 
+    @ExceptionHandler(OurException.class)
+    public ResponseEntity<ApiResponse<?>> handleOurException(OurException exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
+
     @ExceptionHandler(ValidTokenException.class)
     public ResponseEntity<?> handleValidateTokenException(ValidTokenException exception, @NotNull HttpServletRequest request){
         String message = exception.getMessage();

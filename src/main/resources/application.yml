@@ -32,3 +32,11 @@ spring:
     valid-duration: 7200 #in second (2 hour)
     refreshable-duration: 432000 #in second 432 000 (5day)
     issuer: khangmoihocit
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY} # Truyền key của bạn vào đây
+        chat:
+          options:
+            model: gemini-2.5-flash-lite # Model nhanh và rẻ nhất

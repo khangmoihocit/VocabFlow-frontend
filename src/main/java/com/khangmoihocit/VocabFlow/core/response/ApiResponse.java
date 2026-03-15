@@ -51,6 +51,14 @@ public class ApiResponse<T> {
         return res;
     }
 
+    public static ApiResponse<?> error(String message){
+        ApiResponse<?> res = new ApiResponse<>();
+        res.success = false;
+        res.code = "ERROR";
+        res.message = message;
+        return res;
+    }
+
     public static ApiResponse<?> error(ErrorCode errorCode, Object errors){
         ApiResponse<?> res = error(errorCode);
         res.errors = errors;
